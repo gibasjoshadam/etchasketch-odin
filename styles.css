@@ -4,11 +4,31 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap:24px;
+    margin:0px;
+    padding:50px;
 }
 
-#area{
+#header{
+    font-size: 96px;
+}
+
+#area, #settings{
     display:flex;
     flex-wrap:wrap;
     justify-content: center;
-    align-items: center;
+    align-items:center;
+}
+
+#settings{
+    gap:10px;
+}
+
+.inputs{
+    display:flex;
+    gap:3px;
+}
+
+input{
+    width: 30px;
 }

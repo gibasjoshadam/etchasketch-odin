@@ -1,35 +1,81 @@
+const userHeight = document.querySelector(".height");
+const userWidth = document.querySelector(".width");
+const userBlockSize = document.querySelector(".size");
+
 const etchArea = document.querySelector("#area");
 
-const gridNumOfRow = 20;
-const gridNumOfColumn = 20;
-const blockSize = 30;
+const applyBtn = document.querySelector("button");
 
-const gridTotalBlocks = gridNumOfRow * gridNumOfColumn;
+let gridNumOfRow=40, gridNumOfColumn=200, blockSize=20, gridTotalBlocks;
+let gridRowSizePx, gridColumnSizePx, blockSizePx;
+let drawing = false;
 
-const gridRowSizePx = `${gridNumOfRow * blockSize}px`; 
-const gridColumnSizePx = `${gridNumOfColumn * blockSize}px`;
-const blockSizePx = `${blockSize}px`;
+applyBtn.addEventListener("click", applySettings);
 
-etchArea.style.height = gridColumnSizePx;
-etchArea.style.width = gridRowSizePx;
+function applySettings(){
+    removeBlocks();
+    drawing = false;
+
+    gridNumOfRow = parseInt(userWidth.value);
+    gridNumOfColumn = parseInt(userHeight.value);
+    blockSize = parseInt(userBlockSize.value);
+
+    setCanvas();
+    renderGrid();
+}
+
+function setCanvas() {
+    gridTotalBlocks = gridNumOfRow * gridNumOfColumn;
+    gridRowSizePx = `${(gridNumOfRow * blockSize)}px`; 
+    gridColumnSizePx = `${(gridNumOfColumn * blockSize)}px`;
+    blockSizePx = `${blockSize}px`;
+
+    etchArea.style.height = gridColumnSizePx;
+    etchArea.style.width = gridRowSizePx;
+}
+
+function removeBlocks() {
+    while(etchArea.firstChild){
+        etchArea.firstChild.remove();
+    }
+}
 
 function createBlock() {
     const gridSingle = document.createElement("block");
 
     gridSingle.style.height = blockSizePx;
     gridSingle.style.width = blockSizePx;
-    gridSingle.style.backgroundColor = "#ffccff";
+    gridSingle.style.backgroundColor = "white";
 
     etchArea.appendChild(gridSingle);
 
-    gridSingle.addEventListener("mouseover", () => {
-        gridSingle.style.backgroundColor = "#ff66cc";
-    })
-    gridSingle.addEventListener("mouseout", () => {
-        gridSingle.style.backgroundColor = "#ffccff";
-    })
+    mouseHover = () => {
+        if (drawing){
+        gridSingle.style.backgroundColor = randomRgbColor();
+        }
+    }
+    mouseDrawingEnable = () => {
+        drawing = true;
+    }
+    mouseDrawingDisable = () => {
+        drawing = false;
+    }
+
+    gridSingle.addEventListener("mousedown", mouseDrawingEnable);
+    gridSingle.addEventListener("mouseup", mouseDrawingDisable);
+    gridSingle.addEventListener("mouseover", mouseHover);
 }
 
-for (let i = 1; i <= gridTotalBlocks; i++){
-    createBlock();
+function randomValue255(){
+    return Math.floor(Math.random()*255)
+}
+
+function randomRgbColor(){
+    return `rgb(${randomValue255()}, ${randomValue255()}, ${randomValue255()})`
+}
+
+function renderGrid(){
+    for (let i = 1; i <= gridTotalBlocks; i++){
+        createBlock();
+    }
 }
